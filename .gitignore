@@ -1,0 +1,30 @@
+# General
+.DS_Store
+.env
+*.log
+
+# Node
+node_modules/
+dist/
+.cache/
+
+# Go
+bin/
+*.out
+coverage/
+
+# iOS/Android
+DerivedData/
+.gradle/
+.build/
+Pods/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Docker
+**/.air*
+**/.idea/

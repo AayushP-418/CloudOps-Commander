@@ -1,0 +1,71 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: cloudops
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  opensearch:
+    image: opensearchproject/opensearch:2.13.0
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+
+  localstack:
+    image: localstack/localstack:3.6
+    environment:
+      - SERVICES=sns,s3
+      - DEBUG=1
+    ports:
+      - "4566:4566"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - "8025:8025"
+
+  backend-go:
+    build:
+      context: ./backend-go
+      target: dev
+    volumes:
+      - ./backend-go:/app
+      - go-mod-cache:/go/pkg/mod
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/cloudops?sslmode=disable
+
+  web-angularjs:
+    build:
+      context: ./web-angularjs
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web-angularjs:/app
+      - web-node-modules:/app/node_modules
+    depends_on:
+      - backend-go
+
+volumes:
+  go-mod-cache: {}
+  web-node-modules: {}

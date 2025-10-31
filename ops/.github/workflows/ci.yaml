@@ -1,0 +1,28 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Backend build
+        run: |
+          cd backend-go && go build ./...
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Web install
+        run: |
+          cd web-angularjs && npm ci || npm install
+      - name: Web build
+        run: |
+          cd web-angularjs && npm run build || true

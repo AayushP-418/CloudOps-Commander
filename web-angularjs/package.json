@@ -1,0 +1,19 @@
+{
+  "name": "cloudops-web-angularjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "webpack serve --config webpack.config.js --mode development",
+    "build": "webpack --config webpack.config.js --mode production",
+    "test": "echo 'No tests yet' && exit 0"
+  },
+  "dependencies": {
+    "angular": "1.8.3"
+  },
+  "devDependencies": {
+    "webpack": "5.92.0",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "4.15.2",
+    "html-webpack-plugin": "5.6.0"
+  }
+}
